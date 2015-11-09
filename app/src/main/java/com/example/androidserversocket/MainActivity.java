@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
@@ -21,6 +24,9 @@ public class MainActivity extends Activity {
 	TextView info, infoip, msg;
 	String message = "";
 	ServerSocket serverSocket;
+	BufferedReader input;
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,13 @@ public class MainActivity extends Activity {
 
 				while (true) {
 					Socket socket = serverSocket.accept();
+
+					input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					final String read = input.readLine();
+					Log.v("python_read", read);
+
+
+
 					count++;
 					message += "#" + count + " from " + socket.getInetAddress()
 							+ ":" + socket.getPort() + "\n";
@@ -78,13 +91,52 @@ public class MainActivity extends Activity {
 
 						@Override
 						public void run() {
-							msg.setText(message);
+							msg.setText(read);
+
+
+
+
+							if ( read.contains("one")){
+								Log.v("python_read", "case 1");
+								Intent intent = new  Intent(Intent.ACTION_VIEW);
+								intent.setPackage("com.google.android.youtube");
+								intent.setData(Uri.parse("https://www.youtube.com/watch?v=0H5mA7qoM1g"));
+								startActivity(intent);
+
+							}else if(read.contains("two")){
+
+								Intent intent = new  Intent(Intent.ACTION_VIEW);
+								intent.setPackage("com.google.android.youtube");
+								intent.setData(Uri.parse("https://www.youtube.com/watch?v=lNasPo7QP6s"));
+								startActivity(intent);
+
+								Log.v("python_read", "case 2");
+							}else{
+
+								Intent intent = new  Intent(Intent.ACTION_VIEW);
+								intent.setPackage("com.google.android.youtube");
+								intent.setData(Uri.parse("https://www.youtube.com/watch?v=6v2L2UGZJAM"));
+								startActivity(intent);
+
+								Log.v("python_read", "three");
+
+							}
+
+
+
+
+
+
 						}
 					});
-
+/**
 					SocketServerReplyThread socketServerReplyThread = new SocketServerReplyThread(
 							socket, count);
 					socketServerReplyThread.run();
+
+**/
+
+
 
 				}
 			} catch (IOException e) {
@@ -94,6 +146,9 @@ public class MainActivity extends Activity {
 		}
 
 	}
+
+
+	/**
 
 	private class SocketServerReplyThread extends Thread {
 
@@ -116,7 +171,7 @@ public class MainActivity extends Activity {
 	            printStream.print(msgReply);
 	            printStream.close();
 
-				message += "replayed: " + msgReply + "\n";
+				//message += "replayed: " + msgReply + "\n";
 
 				MainActivity.this.runOnUiThread(new Runnable() {
 
@@ -143,12 +198,17 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void run() {
-					msg.setText(message);
+					//msg.setText(message);
 				}
 			});
 		}
 
 	}
+
+
+	**/
+
+
 
 	private String getIpAddress() {
 		String ip = "";
