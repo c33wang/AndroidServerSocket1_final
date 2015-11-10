@@ -10,8 +10,6 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -111,7 +109,15 @@ public class MainActivity extends Activity {
 								startActivity(intent);
 
 								Log.v("python_read", "case 2");
-							}else{
+							}else if(read.contains("play")){
+								Intent intent = new  Intent(Intent.ACTION_VIEW);
+								intent.setPackage("com.google.android.youtube");
+								String link = read.substring(5);
+								intent.setData(Uri.parse(link));
+								startActivity(intent);
+
+
+							} else{
 
 								Intent intent = new  Intent(Intent.ACTION_VIEW);
 								intent.setPackage("com.google.android.youtube");
